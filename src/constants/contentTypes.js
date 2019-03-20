@@ -1,0 +1,2 @@
+export const ACCOUNT_CONTENT = 'ACCOUNT_CONTENT';
+export const VOID_CONTENT = 'VOID_CONTENT';
