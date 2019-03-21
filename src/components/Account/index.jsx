@@ -166,7 +166,7 @@ const AccountContainer = styled.div`
   overflow-y: auto;
 
   width: 1000px;
-  height: 600px;
+  height: 450px;
 `;
 
 function mapStateToProps(state) {
