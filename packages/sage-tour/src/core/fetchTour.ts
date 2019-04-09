@@ -9,6 +9,7 @@ export interface TourData {
     floor: number;
   }[];
   token: string;
+  rootPanoramaId: number;
 }
 
 export default (tourToken: string): Promise<TourData> => {
@@ -44,10 +45,13 @@ export default (tourToken: string): Promise<TourData> => {
         };
       });
 
+      const rootPanoramaId = parseInt(response.data.rootPanoramaId);
+
       resolve({
         panoramas: panoramaGraph,
         floorplans,
-        token: tourToken
+        token: tourToken,
+        rootPanoramaId
       });
     });
   });

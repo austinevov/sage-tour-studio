@@ -44,11 +44,13 @@ export default class SageTour {
     opts: SageTourOpts
   ) {
     fetchTour(token).then((data: TourData) => {
+      const rootId =
+        opts.rootId === undefined ? data.rootPanoramaId : opts.rootId;
       this._tour = new SageTourInternal(
         container,
         data.panoramas,
         onLoad,
-        opts
+        Object.assign(opts, { rootId })
       );
     });
   }

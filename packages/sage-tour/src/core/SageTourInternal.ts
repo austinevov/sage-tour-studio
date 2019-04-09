@@ -94,9 +94,14 @@ export default class SageTourInternal {
         this._initialized = true;
         this._scene.panoramaManager().initialize(this._sceneRenderer.context());
         this._scene.initialize();
-        this._tourController.changePanorama(
-          this._scene.panoramaManager().panoramas()[0]
-        );
+
+        let rootPanorama = this._scene.panoramaManager().panoramas()[0];
+        if (!Number.isNaN(opts.rootId)) {
+          console.log(opts.rootId);
+          rootPanorama = this._scene.panoramaManager().byId(opts.rootId);
+        }
+
+        this._tourController.changePanorama(rootPanorama);
 
         this._tourController.setTheta(yaw);
         this._tourController.setPhi(pitch);
