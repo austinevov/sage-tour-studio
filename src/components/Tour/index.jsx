@@ -6,12 +6,23 @@ import SageTour from '../../../packages/sage-tour';
 
 class Tour extends Component {
   componentDidMount = () => {
-    const token = this.props.match.params.id;
-    const opts = {
-      imagePathRoot: `https://s3.amazonaws.com/assets.sagetourstudio/${token}`,
-      disableControls: false
+    const createTour = (container, token, forceLD = false) => {
+      const opts = {
+        initialYawDegrees: 0,
+        imagePathRoot: `https://s3.amazonaws.com/assets.sagetourstudio/${token}`,
+        forceLD,
+        disableControls: false
+      };
+
+      this.tour = new SageTour(container, token, () => {}, opts);
+      tour.on('context_lost', () => {
+        this.tour.destroyDOM();
+        createTour(container, token, true);
+      });
     };
-    this.tour = new SageTour(this.container, token, () => {}, opts);
+
+    const token = this.props.match.params.id;
+    createTour(this.container, token);
   };
 
   render() {
@@ -28,6 +39,9 @@ class Tour extends Component {
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 `;
 
 export default Tour;

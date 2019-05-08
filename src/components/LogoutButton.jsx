@@ -19,7 +19,6 @@ const Logout = styled(Button)`
   color: white;
   padding: 5px 15px;
   font-size: 0.9rem;
-  font-family: 'Roboto', cursive;
 `;
 
 function mapStateToProps(state) {

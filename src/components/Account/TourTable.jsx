@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
 import axios from 'axios';
+import { ACTIVATE_CONFIRMATION } from '../../constants/actionTypes';
 
 class TourTable extends Component {
   state = {
@@ -35,64 +36,70 @@ class TourTable extends Component {
   render() {
     return (
       <Table>
-        <HeaderCell gr="1/2" gc="1/2">
+        <HeaderCell gr='1/2' gc='1/2'>
           My Tours
         </HeaderCell>
-        <HeaderCell gr="1/2" gc="2/3">
+        <HeaderCell gr='1/2' gc='2/3'>
           Building/Project
         </HeaderCell>
-        <HeaderCell gr="1/2" gc="3/4">
+        <HeaderCell gr='1/2' gc='3/4'>
           Date Created
         </HeaderCell>
-        <HeaderCell gr="1/2" gc="4/5">
-          Tour Points
-        </HeaderCell>
-        <HeaderCell gr="1/2" gc="5/6">
+
+        <HeaderCell gr='1/2' gc='4/5'>
           Floor Plans
         </HeaderCell>
-        <HeaderCell gr="1/2" gc="6/7">
+        <HeaderCell gr='1/2' gc='5/6'>
           Panoramas
         </HeaderCell>
-        <HeaderCell gr="1/2" gc="7/8">
+        <HeaderCell gr='1/2' gc='6/7'>
           Share
         </HeaderCell>
-        <HeaderCell gr="1/2" gc="8/9">
+        <HeaderCell gr='1/2' gc='7/8'>
           Edit
+        </HeaderCell>
+        <HeaderCell gr='1/2' gc='8/9'>
+          Remove
         </HeaderCell>
         {this.state.rows.map((row, index) => {
           const even = index % 2 === 0;
           const r = `${index + 2}/${index + 3}`;
           return (
             <>
-              <Cell gr={r} gc="1/2" even={even}>
+              <Cell gr={r} gc='1/2' even={even}>
                 {row.name}
               </Cell>
-              <Cell gr={r} gc="2/3" even={even}>
+              <Cell gr={r} gc='2/3' even={even}>
                 {row.buildingName}
               </Cell>
-              <Cell gr={r} gc="3/4" even={even}>
+              <Cell gr={r} gc='3/4' even={even}>
                 01/01/2019
               </Cell>
-              <Cell gr={r} gc="4/5" even={even}>
-                {`${row.panoramaCount} points`}
-              </Cell>
-              <Cell gr={r} gc="5/6" underline even={even}>
+
+              <Cell gr={r} gc='4/5' underline even={even}>
                 {`${row.floorplanCount} floorplans`}
               </Cell>
-              <Cell gr={r} gc="6/7" underline even={even}>
+              <Cell gr={r} gc='5/6' underline even={even}>
                 {`${row.panoramaCount} panoramas`}
               </Cell>
-              <Cell gr={r} gc="7/8" even={even}>
+              <Cell gr={r} gc='6/7' even={even}>
                 <ShareButton
-                  onClick={() => this.props.dispatch(push(`/v/${row.token}`))}>
-                  <img src="/shareLink.svg" />
+                  onClick={() => this.props.dispatch(push(`/v/${row.token}`))}
+                >
+                  <img src='/shareLink.svg' />
                 </ShareButton>
               </Cell>
-              <Cell gr={r} gc={8 / 9} even={even}>
+              <Cell gr={r} gc='7/8' even={even}>
                 <EditButton
-                  onClick={() => this.props.dispatch(push(`/t/${row.token}`))}>
-                  <img src="/edit.svg" />
+                  onClick={() => this.props.dispatch(push(`/t/${row.token}`))}
+                >
+                  <img src='/edit.svg' />
                 </EditButton>
+              </Cell>
+              <Cell gr={r} gc='8/9' even={even}>
+                <GarbageButton onClick={() => this.props.removeTour(row.token)}>
+                  <img src='/trash.svg' />
+                </GarbageButton>
               </Cell>
             </>
           );
@@ -122,7 +129,12 @@ const RoundBlackButton = styled.button`
 `;
 const ShareButton = styled(RoundBlackButton)``;
 const EditButton = styled(RoundBlackButton)``;
-
+const GarbageButton = styled(RoundBlackButton)`
+  img {
+    width: 16px;
+    height: 16px;
+  }
+`;
 const Cell = styled.div`
   ${props =>
     props.gc &&
@@ -183,7 +195,16 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch
+    dispatch,
+    removeTour: token => {
+      dispatch({
+        type: ACTIVATE_CONFIRMATION,
+        payload: {
+          type: 'REMOVE_TOUR',
+          token
+        }
+      });
+    }
   };
 }
 

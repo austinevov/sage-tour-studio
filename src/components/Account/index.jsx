@@ -7,6 +7,7 @@ import { default as GenericCreateTourButton } from './CreateTourButton';
 import TourTable from './TourTable';
 import CreateTour from '../CreateTour';
 import { SET_CREATE_TOUR } from '../../constants/actionTypes';
+import Confirmation from '../Confirmation';
 
 class Account extends Component {
   createTour = () => {
@@ -25,18 +26,19 @@ class Account extends Component {
             <CreateTourButton onClick={this.createTour} />
             <ProfileOverview>
               <PublicDetails>
-                <ProfilePicture src="/man.svg" />
+                <ProfilePicture src='/man.svg' />
                 <IRLDetails>
-                  <Span color="#4D575A" fontSize="32px" lineHeight="50px">
+                  <Span color='#4D575A' fontSize='32px' lineHeight='50px'>
                     {this.props.firstName} {this.props.lastName}
                   </Span>
-                  <Span color="#4D575A" fontSize="18px" lineHeight="27px">
+                  <Span color='#4D575A' fontSize='18px' lineHeight='27px'>
                     Organization,
                     <Span
-                      color="#4D575A"
-                      fontSize="18px"
-                      lineHeight="27px"
-                      italics>
+                      color='#4D575A'
+                      fontSize='18px'
+                      lineHeight='27px'
+                      italics
+                    >
                       {' Role'}
                     </Span>
                   </Span>
@@ -45,47 +47,51 @@ class Account extends Component {
               <FlexBuffer />
               <LoginDetails>
                 <Span
-                  gr="1/2"
-                  gc="1/2"
-                  color="#4D575A"
-                  fontSize="18px"
-                  lineHeight="27px">
+                  gr='1/2'
+                  gc='1/2'
+                  color='#4D575A'
+                  fontSize='18px'
+                  lineHeight='27px'
+                >
                   Email
                 </Span>
                 <Span
-                  gr="1/2"
-                  gc="2/3"
-                  color="#4D575A"
-                  fontSize="18px"
-                  lineHeight="27px"
-                  italics>
+                  gr='1/2'
+                  gc='2/3'
+                  color='#4D575A'
+                  fontSize='18px'
+                  lineHeight='27px'
+                  italics
+                >
                   {this.props.email}
                 </Span>
                 <Span
-                  gr="2/3"
-                  gc="1/2"
-                  color="#4D575A"
-                  fontSize="18px"
-                  lineHeight="27px">
+                  gr='2/3'
+                  gc='1/2'
+                  color='#4D575A'
+                  fontSize='18px'
+                  lineHeight='27px'
+                >
                   Phone
                 </Span>
                 <Span
-                  gr="2/3"
-                  gc="2/3"
-                  color="#4D575A"
-                  fontSize="18px"
-                  lineHeight="27px"
+                  gr='2/3'
+                  gc='2/3'
+                  color='#4D575A'
+                  fontSize='18px'
+                  lineHeight='27px'
                   italics
                 />
                 <Span
-                  fontSize="10px"
-                  gr="3/4"
-                  gc="3/4"
-                  color="#4D575A"
-                  fontSize="10px"
-                  lineHeight="16px"
+                  fontSize='10px'
+                  gr='3/4'
+                  gc='3/4'
+                  color='#4D575A'
+                  fontSize='10px'
+                  lineHeight='16px'
                   italics
-                  underline>
+                  underline
+                >
                   Change Password
                 </Span>
               </LoginDetails>
@@ -95,6 +101,7 @@ class Account extends Component {
         ) : (
           <CreateTour cancelCreateTour={this.cancelCreateTour} />
         )}
+        {this.props.isShowingConfirmation && <Confirmation />}
       </Container>
     );
   }
@@ -174,7 +181,8 @@ function mapStateToProps(state) {
     isCreatingTour: state.dashboard.isCreatingTour,
     email: state.user.email,
     firstName: state.user.firstName,
-    lastName: state.user.lastName
+    lastName: state.user.lastName,
+    isShowingConfirmation: state.dashboard.isShowingConfirmation
   };
 }
 
