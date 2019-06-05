@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import ControlButton from './ControlButton';
@@ -15,40 +16,42 @@ class ControlPanel extends Component {
   render() {
     return (
       <Container>
-        <img
-          src="/sage_logo_white.svg"
-          alt="Sage Logo"
-          width="55px"
-          height="73px"
-        />
+        <Link to='/'>
+          <img
+            src='/sage_logo_white.svg'
+            alt='Sage Logo'
+            width='55px'
+            height='73px'
+          />
+        </Link>
         <ControlButton
           onClick={() => this.props.activateTool(MOVE_TOOL)}
           selected={this.props.activeTool === MOVE_TOOL}
-          src="/pointer.svg"
+          src='/pointer.svg'
         />
         <ControlButton
           onClick={() => this.props.activateTool(LINK_TOOL)}
           selected={this.props.activeTool === LINK_TOOL}
-          src="/link.svg"
+          src='/link.svg'
         />
         <ControlButton
           onClick={() => this.props.activateTool(ERASER_TOOL)}
           selected={this.props.activeTool === ERASER_TOOL}
-          src="/erase.svg"
+          src='/erase.svg'
         />
         <ControlButton
           onClick={() => this.props.activateTool(FRAME_TOOL)}
           selected={this.props.activeTool === FRAME_TOOL}
-          src="/frame.svg"
+          src='/frame.svg'
         />
-        <ControlButton src="/save.svg" onClick={this.props.saveTour} />
+        <ControlButton src='/save.svg' onClick={this.props.saveTour} />
       </Container>
     );
   }
 }
 
 const Container = styled.div`
-  > img {
+  > a {
     user-select: none;
     margin-right: 33px;
     margin-left: 22px;

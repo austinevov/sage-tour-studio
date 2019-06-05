@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
 import axios from 'axios';
-import { ACTIVATE_CONFIRMATION } from '../../constants/actionTypes';
+import {
+  ACTIVATE_CONFIRMATION,
+  BEGIN_MEDIA_UPDATE
+} from '../../constants/actionTypes';
 
 class TourTable extends Component {
   state = {
@@ -12,7 +15,26 @@ class TourTable extends Component {
   };
 
   componentDidMount = () => {
+    this.fetchRowLoop();
+  };
+
+  removeTour = token => {
+    axios
+      .delete(`/api/delete-tour/${token}`, {
+        withCredentials: true
+      })
+      .then(response => {
+        if (response.status === 200) {
+          const rows = this.state.rows.filter(row => row.token !== token);
+          this.setState({ rows });
+        }
+      })
+      .catch(err => {});
+  };
+
+  fetchRowLoop = () => {
     this.fetchRows();
+    setTimeout(this.fetchRowLoop, 7000);
   };
 
   fetchRows = () => {
@@ -26,7 +48,9 @@ class TourTable extends Component {
             dateCreated: data.dateCreated,
             floorplanCount: data.floorplanCount,
             panoramaCount: data.panoramaCount,
-            token: data.token
+            token: data.token,
+            status: data.status || 'Unknown',
+            disabled: (data.status || '').toLowerCase() !== 'ready'
           };
         });
         this.setState({ rows });
@@ -43,7 +67,7 @@ class TourTable extends Component {
           Building/Project
         </HeaderCell>
         <HeaderCell gr='1/2' gc='3/4'>
-          Date Created
+          Status
         </HeaderCell>
 
         <HeaderCell gr='1/2' gc='4/5'>
@@ -66,38 +90,69 @@ class TourTable extends Component {
           const r = `${index + 2}/${index + 3}`;
           return (
             <>
-              <Cell gr={r} gc='1/2' even={even}>
+              <Cell style={{ gridRow: `${r}`, gridColumn: '1/2' }} even={even}>
                 {row.name}
               </Cell>
-              <Cell gr={r} gc='2/3' even={even}>
+              <Cell style={{ gridRow: `${r}`, gridColumn: '2/3' }} even={even}>
                 {row.buildingName}
               </Cell>
-              <Cell gr={r} gc='3/4' even={even}>
-                01/01/2019
+              <Cell style={{ gridRow: `${r}`, gridColumn: '3/4' }} even={even}>
+                {row.status.toUpperCase()}
               </Cell>
 
-              <Cell gr={r} gc='4/5' underline even={even}>
+              <Cell
+                style={{ gridRow: `${r}`, gridColumn: '4/5' }}
+                underline
+                even={even}
+                onClick={() =>
+                  this.props.beginMediaUpdate('floorplans', row.token)
+                }
+              >
                 {`${row.floorplanCount} floorplans`}
               </Cell>
-              <Cell gr={r} gc='5/6' underline even={even}>
+              <Cell
+                style={{ gridRow: `${r}`, gridColumn: '5/6' }}
+                underline
+                even={even}
+                onClick={() =>
+                  this.props.beginMediaUpdate('panoramas', row.token)
+                }
+              >
                 {`${row.panoramaCount} panoramas`}
               </Cell>
-              <Cell gr={r} gc='6/7' even={even}>
+              <Cell style={{ gridRow: `${r}`, gridColumn: '6/7' }} even={even}>
                 <ShareButton
-                  onClick={() => this.props.dispatch(push(`/v/${row.token}`))}
+                  disabled={row.disabled}
+                  onClick={() => {
+                    if (!row.disabled) {
+                      this.props.dispatch(push(`/v/${row.token}`));
+                    }
+                  }}
                 >
                   <img src='/shareLink.svg' />
                 </ShareButton>
               </Cell>
-              <Cell gr={r} gc='7/8' even={even}>
+              <Cell style={{ gridRow: `${r}`, gridColumn: '7/8' }} even={even}>
                 <EditButton
-                  onClick={() => this.props.dispatch(push(`/t/${row.token}`))}
+                  disabled={row.disabled}
+                  onClick={() => {
+                    if (!row.disabled) {
+                      this.props.dispatch(push(`/t/${row.token}`));
+                    }
+                  }}
                 >
                   <img src='/edit.svg' />
                 </EditButton>
               </Cell>
-              <Cell gr={r} gc='8/9' even={even}>
-                <GarbageButton onClick={() => this.props.removeTour(row.token)}>
+              <Cell style={{ gridRow: `${r}`, gridColumn: '8/9' }} even={even}>
+                <GarbageButton
+                  disabled={row.disabled}
+                  onClick={() => {
+                    if (!row.disabled) {
+                      this.removeTour(row.token);
+                    }
+                  }}
+                >
                   <img src='/trash.svg' />
                 </GarbageButton>
               </Cell>
@@ -110,6 +165,12 @@ class TourTable extends Component {
 }
 
 const RoundBlackButton = styled.button`
+  ${props =>
+    props.disabled &&
+    css`
+      opacity: 0.6;
+      cursor: not-allowed;
+    `}
   width: 28px;
   height: 28px;
   outline: none;
@@ -204,6 +265,9 @@ function mapDispatchToProps(dispatch) {
           token
         }
       });
+    },
+    beginMediaUpdate: (type, token) => {
+      dispatch({ type: BEGIN_MEDIA_UPDATE, payload: { type, token } });
     }
   };
 }

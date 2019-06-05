@@ -13,6 +13,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Dashboard from './components/Dashboard';
 import Account from './components/Account';
 import Tour from './components/Tour';
+import VRTour from './components/VRTour';
 
 class App extends Component {
   componentDidMount() {
@@ -33,10 +34,11 @@ class App extends Component {
       <GlobalStyle key={0} />,
       <>
         <Switch>
-          <PrivateRoute exact path="/" component={Dashboard} />
-          <Route path="/login" component={Registration} />
-          <PrivateRoute path="/t/:id" component={TourDesigner} />
-          <Route path="/v/:id" component={Tour} />
+          <PrivateRoute exact path='/' component={Dashboard} />
+          <Route path='/login' component={Registration} />
+          <PrivateRoute path='/t/:id' component={TourDesigner} />
+          <Route path='/v/:id' component={Tour} />
+          <Route path='/vr/:id' component={VRTour} />
         </Switch>
       </>
     ];

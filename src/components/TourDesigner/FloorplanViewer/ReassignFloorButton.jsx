@@ -5,42 +5,15 @@ import { Span } from '../../../styles';
 import { CHEVRON_UP, CHEVRON_DOWN } from './FloorChanger';
 import { SHIFT_FLOOR } from '../../../constants/actionTypes';
 
-class ReassignFloor extends Component {
+class ReassignFloorButton extends Component {
   render() {
-    const grayBottom = this.props.currentFloor <= 1;
-    const grayTop = this.props.currentFloor >= this.props.maxFloor;
-
     return (
-      <Container>
-        <ReassignSpan>Shift Floor</ReassignSpan>
-        <Chevron
-          src={CHEVRON_UP}
-          gray={grayTop}
-          onClick={() => this.props.shiftFloor(1)}
-        />
-        <Chevron
-          src={CHEVRON_DOWN}
-          gray={grayBottom}
-          onClick={() => this.props.shiftFloor(-1)}
-        />
+      <Container onClick={this.props.openReassignFloor}>
+        <ReassignSpan>Reassign Floors</ReassignSpan>
       </Container>
     );
   }
 }
-
-const Chevron = styled.img`
-  width: 15px;
-  height: 15px;
-
-  margin-left: 10px;
-  cursor: pointer;
-
-  ${props =>
-    props.gray &&
-    css`
-      opacity: 0.2;
-    `}
-`;
 
 const ReassignSpan = styled(Span)`
   text-transform: uppercase;
@@ -55,6 +28,11 @@ const Container = styled.div`
   position: absolute;
   bottom: 0px;
   left: 0px;
+  border-radius: 12px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0px;
+
+  cursor: pointer;
 
   display: flex;
   flex-direction: row;
@@ -81,4 +59,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ReassignFloor);
+)(ReassignFloorButton);

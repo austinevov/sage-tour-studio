@@ -1,12 +1,27 @@
 import axios from 'axios';
 
 export default tour => {
-  const { token, panoramas, floorplans, viewBoxX, viewBoxY } = tour;
+  const {
+    token,
+    panoramas,
+    floorplans,
+    viewBoxX,
+    viewBoxY
+  } = tour;
+
+  axios.post('/api/update-tour', {
+    tourToken: token,
+    vbx: viewBoxX,
+    vby: viewBoxY
+  }, {
+    withCredentials: true
+  });
+
   panoramas.forEach(panorama => {
     console.log('PANORAMA: ', panorama);
     const panorama_id = panorama.id;
     const [x, y] = panorama.position;
-    const panorama_position = [x, 0, y].toString();
+    const panorama_position = [y, 0, -x].toString();
     const panorama_floor = panorama.floor;
     const panorama_edges = panorama.edges.toString();
     const panorama_label = panorama.label;
@@ -14,8 +29,7 @@ export default tour => {
 
     axios
       .post(
-        '/api/update-panorama',
-        {
+        '/api/update-panorama', {
           tourToken: token,
           panorama_id,
           panorama_position,
@@ -23,8 +37,9 @@ export default tour => {
           panorama_edges,
           panorama_label,
           panorama_bayed
-        },
-        { withCredentials: true }
+        }, {
+          withCredentials: true
+        }
       )
       .catch(err => {
         console.log('Could not update panorama');
@@ -36,18 +51,20 @@ export default tour => {
     const floorplan_floor = floorplan.floor;
     const floorplan_vbx = viewBoxX;
     const floorplan_vby = viewBoxY;
+    const floorplan_theta = floorplan.theta;
 
     axios
       .post(
-        '/api/update-floorplan',
-        {
+        '/api/update-floorplan', {
           tourToken: token,
           floorplan_id,
           floorplan_floor,
           floorplan_vbx,
-          floorplan_vby
-        },
-        { withCredentials: true }
+          floorplan_vby,
+          floorplan_theta
+        }, {
+          withCredentials: true
+        }
       )
       .catch(err => {
         console.log('Could not update floorplan');

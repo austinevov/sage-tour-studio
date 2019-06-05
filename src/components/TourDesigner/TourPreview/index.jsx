@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
-import { RECEIVE_PREVIEW_CONTAINER } from '../../../constants/actionTypes';
+import {
+  RECEIVE_PREVIEW_CONTAINER,
+  RESET_TOUR_PREVIEW
+} from '../../../constants/actionTypes';
 
 class TourPreview extends Component {
   componentDidMount = () => {
     this.props.receiveContainer(this.container);
   };
+
+  componentWillUnmount = () => {
+    if (this.props.tour) {
+      this.props.resetTourPreview();
+    }
+  };
+
   render() {
     const hideCanvas = !this.props.isShowingPreview;
 
@@ -64,8 +74,6 @@ const CanvasContainer = styled.div`
   }
 `;
 
-const Canvas = styled.canvas``;
-
 function mapStateToProps(state) {
   return {
     isShowingPreview: state.tourDesign.isShowingPreview
@@ -76,6 +84,9 @@ function mapDispatchToProps(dispatch) {
   return {
     receiveContainer: container => {
       dispatch({ type: RECEIVE_PREVIEW_CONTAINER, payload: { container } });
+    },
+    resetTourPreview: () => {
+      dispatch({ type: RESET_TOUR_PREVIEW });
     }
   };
 }

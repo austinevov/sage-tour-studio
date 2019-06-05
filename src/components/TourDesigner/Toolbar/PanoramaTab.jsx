@@ -10,6 +10,10 @@ import {
 } from '../../../constants/actionTypes';
 
 class PanoramaTab extends Component {
+  state = {
+    isDragging: false
+  };
+
   rename = evt => {
     console.log(evt.target.value);
     this.props.rename(this.props.id, evt.target.value);
@@ -25,7 +29,7 @@ class PanoramaTab extends Component {
 
   render() {
     let [x, y] = this.props.mousePosition;
-    x -= 211 / 2;
+    x -= 61 / 2;
     y -= 61 / 2;
     const top = `${this.props.isDragging ? y : 0}px`;
     const left = `${this.props.isDragging ? x : 0}px`;
@@ -41,17 +45,17 @@ class PanoramaTab extends Component {
         dragging={this.props.isDragging}
         ref={container => {
           this.container = container;
-        }}>
+        }}
+      >
         <ThumbnailContainer>
           <Thumbnail
+            crossOrigin='anonymous'
             src={`https://s3.amazonaws.com/assets.sagetourstudio/${
               this.props.token
             }/0-0-${this.props.panorama.id}-px.jpg`}
+            onClick={evt => evt.preventDefault()}
           />
         </ThumbnailContainer>
-        <LabelContainer>
-          <input value={this.props.panorama.label} onChange={this.rename} />
-        </LabelContainer>
       </Container>
     );
   }
@@ -60,7 +64,7 @@ class PanoramaTab extends Component {
 const Container = styled.div`
   cursor: pointer;
   height: 61px;
-  width: 211px;
+  width: fit-content;
   background-color: #ffffff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
   display: flex;
@@ -78,6 +82,7 @@ const Container = styled.div`
   &,
   * {
     box-sizing: border-box;
+    z-index: 100000;
   }
 `;
 
@@ -92,6 +97,12 @@ const ThumbnailContainer = styled.div`
 const Thumbnail = styled.img`
   width: 100%;
   user-select: none;
+
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 `;
 
 const LabelContainer = styled.div`

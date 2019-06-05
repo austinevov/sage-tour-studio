@@ -8,6 +8,7 @@ import TourTable from './TourTable';
 import CreateTour from '../CreateTour';
 import { SET_CREATE_TOUR } from '../../constants/actionTypes';
 import Confirmation from '../Confirmation';
+import TourMediaModal from '../TourMediaModal';
 
 class Account extends Component {
   createTour = () => {
@@ -102,6 +103,9 @@ class Account extends Component {
           <CreateTour cancelCreateTour={this.cancelCreateTour} />
         )}
         {this.props.isShowingConfirmation && <Confirmation />}
+        {this.props.isShowingUpdateMedia && (
+          <TourMediaModal media={this.props.updateMedia} />
+        )}
       </Container>
     );
   }
@@ -170,10 +174,8 @@ const AccountContainer = styled.div`
   align-items: flex-start;
   padding: 70px 140px;
 
-  overflow-y: auto;
-
   width: 1000px;
-  height: 450px;
+  min-height: 450px;
 `;
 
 function mapStateToProps(state) {
@@ -182,7 +184,9 @@ function mapStateToProps(state) {
     email: state.user.email,
     firstName: state.user.firstName,
     lastName: state.user.lastName,
-    isShowingConfirmation: state.dashboard.isShowingConfirmation
+    isShowingConfirmation: state.dashboard.isShowingConfirmation,
+    isShowingUpdateMedia: state.dashboard.isShowingUpdateMedia,
+    updateMedia: state.dashboard.updateMedia
   };
 }
 

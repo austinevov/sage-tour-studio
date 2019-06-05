@@ -4,9 +4,14 @@ const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
 const modeConfig = env => require(`./build-scripts/webpack.${env.mode}`);
 
-module.exports = ({ mode, presets } = { mode: 'production', presets: [] }) => {
-  return webpackMerge(
-    {
+module.exports = ({
+  mode,
+  presets
+} = {
+  mode: 'production',
+  presets: []
+}) => {
+  return webpackMerge({
       mode: mode,
       entry: ['babel-polyfill', './src/index.jsx'],
       output: {
@@ -40,8 +45,7 @@ module.exports = ({ mode, presets } = { mode: 'production', presets: [] }) => {
         extensions: ['.js', '.jsx', '.ts']
       },
       module: {
-        rules: [
-          {
+        rules: [{
             test: /\.(js|jsx)$/,
             exclude: /node_modules/,
             use: ['babel-loader']
@@ -50,22 +54,31 @@ module.exports = ({ mode, presets } = { mode: 'production', presets: [] }) => {
             test: /\.(s*)css$/,
             use: ['style-loader', 'css-loader', 'sass-loader']
           },
-          { test: /\.glsl$/, use: 'raw-loader' },
+          {
+            test: /\.glsl$/,
+            use: 'raw-loader'
+          },
           {
             test: /\.tsx?$/,
             loader: 'awesome-typescript-loader',
             exclude: /node_modules/,
-            query: { declaration: false }
+            query: {
+              declaration: false
+            }
           }
         ]
       },
       plugins: [
-        /*new HtmlWebpackPlugin(),*/ new webpack.ProgressPlugin(),
+        /*new HtmlWebpackPlugin(),*/
+        new webpack.ProgressPlugin(),
         new webpack.ProvidePlugin({
           THREE: 'three'
         })
       ]
     },
-    modeConfig({ mode, presets })
+    modeConfig({
+      mode,
+      presets
+    })
   );
 };

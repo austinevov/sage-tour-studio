@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 
-import SageTour from '../../../packages/sage-tour';
-
+import SageTour from '../../packages/sage-tour/src';
 class Tour extends Component {
   componentDidMount = () => {
     const createTour = (container, token, forceLD = false) => {
@@ -15,7 +14,7 @@ class Tour extends Component {
       };
 
       this.tour = new SageTour(container, token, () => {}, opts);
-      tour.on('context_lost', () => {
+      this.tour.on('context_lost', () => {
         this.tour.destroyDOM();
         createTour(container, token, true);
       });

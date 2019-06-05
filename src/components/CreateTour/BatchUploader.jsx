@@ -48,8 +48,8 @@ class BatchUploader extends Component {
       <Container>
         <InvisibleFileUpload
           onChange={() => this.receiveUpload(this.uploader.files)}
-          type="file"
-          id="file-upload"
+          type='file'
+          id='file-upload'
           multiple={true}
           accept={instanceData[this.props.name].fileTypes}
           ref={uploader => {
@@ -65,8 +65,9 @@ class BatchUploader extends Component {
           </UploaderDetails>
           <UploadButton
             onClick={this.uploadFile}
-            disabled={this.props.disabled}>
-            <img src="/upload.svg" />
+            disabled={this.props.disabled}
+          >
+            <img src='/upload.svg' />
           </UploadButton>
         </Header>
         <UploadList>

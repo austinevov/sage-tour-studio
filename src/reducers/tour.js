@@ -19,7 +19,9 @@ import {
   LOGOUT,
   UPDATE_VIEWBOX
 } from '../constants/actionTypes';
-import { removeFileFormat } from '../utils/removeFileFormat';
+import {
+  removeFileFormat
+} from '../utils/removeFileFormat';
 
 const initialState = {
   name: '',
@@ -45,10 +47,14 @@ export default (state = initialState, action) => {
       return Object.assign({}, initialState);
     }
     case UPDATE_TOUR_NAME: {
-      return Object.assign({}, state, { name: action.payload.name });
+      return Object.assign({}, state, {
+        name: action.payload.name
+      });
     }
     case UPDATE_TOUR_BUILDING_NAME: {
-      return Object.assign({}, state, { buildingName: action.payload.name });
+      return Object.assign({}, state, {
+        buildingName: action.payload.name
+      });
     }
     case UPDATE_TOUR_DESCRIPTION: {
       return Object.assign({}, state, {
@@ -56,7 +62,9 @@ export default (state = initialState, action) => {
       });
     }
     case UPLOAD_TOUR: {
-      return Object.assign({}, state, { isUploading: true });
+      return Object.assign({}, state, {
+        isUploading: true
+      });
     }
     case UPLOAD_FLOORPLAN: {
       const id = uniqid();
@@ -97,7 +105,12 @@ export default (state = initialState, action) => {
         id => id !== action.payload.id
       );
 
-      return Object.assign({}, state, { floorplans: { byId, allIds } });
+      return Object.assign({}, state, {
+        floorplans: {
+          byId,
+          allIds
+        }
+      });
     }
 
     case UPLOAD_PANORAMA: {
@@ -139,7 +152,12 @@ export default (state = initialState, action) => {
         id => id !== action.payload.id
       );
 
-      return Object.assign({}, state, { panoramas: { byId, allIds } });
+      return Object.assign({}, state, {
+        panoramas: {
+          byId,
+          allIds
+        }
+      });
     }
     case UPDATE_ASSET_LOAD: {
       const id = action.payload.id;
@@ -149,7 +167,10 @@ export default (state = initialState, action) => {
         byId[id].loadPercent = action.payload.percent;
 
         return Object.assign({}, state, {
-          panoramas: { ...state.panoramas, byId }
+          panoramas: {
+            ...state.panoramas,
+            byId
+          }
         });
       }
 
@@ -158,7 +179,10 @@ export default (state = initialState, action) => {
       byId[id].loadPercent = action.payload.percent;
 
       return Object.assign({}, state, {
-        floorplans: { ...state.floorplans, byId }
+        floorplans: {
+          ...state.floorplans,
+          byId
+        }
       });
     }
   }

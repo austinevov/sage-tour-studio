@@ -95,7 +95,7 @@ const ConfirmationContainer = styled.div`
   border: 1px solid #4d575a;
 
   font-family: 'Spectral';
-  box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 5px 5px 2px 0px rgba(0, 0, 0, 0.75);
 
   p {
     font-size: 1.6em;

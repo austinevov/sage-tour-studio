@@ -23,8 +23,9 @@ import {
   ERASER_TOOL
 } from '../../../constants/toolTypes';
 import FloorChanger from './FloorChanger';
-import ReassignFloor from './ReassignFloor';
+import ReassignFloorButton from './ReassignFloorButton';
 import { getFloorplanByFloor } from '../../../selectors/tourDesign';
+import ReassignFloors from './ReassignFloors';
 
 const ZOOM_MULTIPLIER = 0.005;
 const PAN_SPEED = 1.5;
@@ -61,11 +62,16 @@ class FloorplanViewer extends Component {
     isLinkSnapped: false,
     linkSnapId: undefined,
     isFraming: false,
-    frameId: undefined
+    frameId: undefined,
+    isReassigningFloor: false
   };
 
   shouldComponentUpdate = (nextProps, nextState) => {
     if (this.state.transform !== nextState.transform) {
+      return true;
+    }
+
+    if (this.state.isReassigningFloor !== nextState.isReassigningFloor) {
       return true;
     }
 
@@ -112,7 +118,7 @@ class FloorplanViewer extends Component {
       return true;
     }
 
-    return false;
+    return true;
   };
 
   fetchSettings = floorplanSrc => {
@@ -359,36 +365,39 @@ class FloorplanViewer extends Component {
 
     return (
       <Container
-        id="floorplan-viewer"
-        key="ev-fpv-container"
+        id='floorplan-viewer'
+        key='ev-fpv-container'
         ref={container => {
           this.container = container;
         }}
         onMouseMove={this.handleMove}
         onMouseUp={this.handleMouseUp}
-        onMouseDown={this.handleMouseDown}>
+        onMouseDown={this.handleMouseDown}
+      >
         <SVG
-          key="ev-fpv-svg"
-          preserveAspectRatio="xMidYMid meet"
-          viewBox={`0 0 ${vbW} ${vbH}`}>
+          key='ev-fpv-svg'
+          preserveAspectRatio='xMidYMid meet'
+          viewBox={`0 0 ${vbW} ${vbH}`}
+        >
           <g
-            key="ev-fpv-g"
+            key='ev-fpv-g'
             ref={group => {
               this.floorplanGroup = group;
-            }}>
+            }}
+          >
             <image
-              x="0px"
-              y="0px"
-              id="sage-fp-image"
-              key="ev-fpv-img"
+              x='0px'
+              y='0px'
+              id='sage-fp-image'
+              key='ev-fpv-img'
               xlinkHref={this.props.src}
               width={`${vbW}px`}
               height={`${vbH}px`}
             />
             {this.state.isLinking && (
               <line
-                stroke="green"
-                strokeWidth="2"
+                stroke='green'
+                strokeWidth='2'
                 x1={this.state.linkStart[0]}
                 y1={this.state.linkStart[1]}
                 x2={
@@ -410,18 +419,18 @@ class FloorplanViewer extends Component {
 
               return [
                 <line
-                  stroke="green"
-                  strokeWidth="2"
+                  stroke='green'
+                  strokeWidth='2'
                   x1={this.props.panoramas[start].position[0]}
                   y1={this.props.panoramas[start].position[1]}
                   x2={this.props.panoramas[end].position[0]}
                   y2={this.props.panoramas[end].position[1]}
                 />,
                 <line
-                  stroke="green"
-                  strokeWidth="20"
+                  stroke='green'
+                  strokeWidth='20'
                   onMouseDown={() => this.removeEdge(start, end)}
-                  opacity="0"
+                  opacity='0'
                   x1={this.props.panoramas[start].position[0]}
                   y1={this.props.panoramas[start].position[1]}
                   x2={this.props.panoramas[end].position[0]}
@@ -441,10 +450,10 @@ class FloorplanViewer extends Component {
                   onMouseOut={() => this.unsnapLink(id)}
                   onClick={() => this.props.previewPanorama(id)}
                   key={`ev-sprite-${id}`}
-                  r="15px"
+                  r='15px'
                   cx={cx}
                   cy={cy}
-                  fill="#00ff00"
+                  fill='#00ff00'
                 />
               );
             })}
@@ -453,22 +462,31 @@ class FloorplanViewer extends Component {
             cx={`${WHEEL_CX}`}
             cy={`${WHEEL_CY}`}
             r={`${WHEEL_R}`}
-            stroke="#2d4146"
-            stroke-width="3"
-            fill="none"
-            key="ev-rotation-wheel"
+            stroke='#2d4146'
+            stroke-width='3'
+            fill='none'
+            key='ev-rotation-wheel'
           />
           <RotationMarker
             cx={`${markerX}`}
             cy={`${markerY}`}
-            r="10"
-            fill="#4d575a"
-            key="ev-rotation-marker"
+            r='10'
+            fill='#4d575a'
+            key='ev-rotation-marker'
             onMouseDown={this.startMarkerDrag}
           />
         </SVG>
         <FloorChanger />
-        <ReassignFloor />
+        <ReassignFloorButton
+          openReassignFloor={() => {
+            this.setState({ isReassigningFloor: true });
+          }}
+        />
+        {this.state.isReassigningFloor && (
+          <ReassignFloors
+            exit={() => this.setState({ isReassigningFloor: false })}
+          />
+        )}
       </Container>
     );
   }
